@@ -1,17 +1,17 @@
-INSERT INTO Customer (first_name, last_name, email, phone, created_at) VALUES
-    ('Erik', 'Lindberg', 'erik.lindberg@example.com', '+46 70-123 45 67', '2024-01-10'),
-    ('Sofia', 'Andersson', 'sofia.andersson@example.com', '+46 70-234 56 78', '2024-02-03'),
-    ('Elias', 'Nystrom', 'elias.nystrom@example.com', '+46 70-345 67 89', '2024-02-15'),
-    ('Amanda', 'Jansson', 'amanda.jansson@example.com', '+46 70-456 78 90', '2024-03-02'),
-    ('Daniel', 'Berglund', 'daniel.berglund@example.com', '+46 70-567 89 01', '2024-03-20');
+INSERT INTO Customer (first_name, last_name, email, phone) VALUES
+    ('Erik', 'Lindberg', 'erik.lindberg@example.com', '+46 70-123 45 67'),
+    ('Sofia', 'Andersson', 'sofia.andersson@example.com', '+46 70-234 56 78'),
+    ('Elias', 'Nystrom', 'elias.nystrom@example.com', '+46 70-345 67 89'),
+    ('Amanda', 'Jansson', 'amanda.jansson@example.com', '+46 70-456 78 90'),
+    ('Daniel', 'Berglund', 'daniel.berglund@example.com', '+46 70-567 89 01');
 
-INSERT INTO Product (name, description, price, created_at, active) VALUES
-    ('Organic Cotton T-Shirt', 'Soft crew neck tee in organic cotton', 199.00, '2024-01-05', TRUE),
-    ('Slim Fit Jeans', 'Dark wash stretch denim, mid-rise', 699.00, '2024-01-18', TRUE),
-    ('Wool Beanie', 'Rib-knit merino beanie', 249.00, '2024-02-01', TRUE),
-    ('Denim Jacket', 'Classic trucker jacket with metal buttons', 899.00, '2024-02-10', TRUE),
-    ('Waterproof Rain Jacket', 'Lightweight hooded rain jacket with taped seams', 1499.00, '2024-02-22', TRUE),
-    ('Linen Shorts', 'Relaxed fit linen shorts, drawstring waist', 449.00, '2024-03-01', FALSE);
+INSERT INTO Product (name, description, price, available) VALUES
+    ('Organic Cotton T-Shirt', 'Soft crew neck tee in organic cotton', 199.00, TRUE),
+    ('Slim Fit Jeans', 'Dark wash stretch denim, mid-rise', 699.00, TRUE),
+    ('Wool Beanie', 'Rib-knit merino beanie', 249.00, TRUE),
+    ('Denim Jacket', 'Classic trucker jacket with metal buttons', 899.00, TRUE),
+    ('Waterproof Rain Jacket', 'Lightweight hooded rain jacket with taped seams', 1499.00, TRUE),
+    ('Linen Shorts', 'Relaxed fit linen shorts, drawstring waist', 449.00, FALSE);
 
 INSERT INTO `Order` (customer_id, order_date, status, total_amount) VALUES
     (1, '2024-03-05', 'Processing', 647.00),
