@@ -4,6 +4,9 @@ DROP TABLE IF EXISTS CustomerFavorite;
 DROP TABLE IF EXISTS Customer;
 DROP TABLE IF EXISTS Product;
 
+DROP VIEW IF EXISTS v_customer_sales;
+DROP VIEW IF EXISTS v_available_products;
+
 CREATE TABLE Customer (
     customer_id      INT PRIMARY KEY AUTO_INCREMENT,
     first_name       VARCHAR(50) NOT NULL,
@@ -28,7 +31,7 @@ CREATE TABLE `Order` (
     customer_id      INT NOT NULL,
     order_date       DATE NOT NULL,
     status           VARCHAR(50) NOT NULL,
-    total_amount     DECIMAL(10,2) NOT NULL,
+    total_amount     DECIMAL(10,2) NOT NULL DEFAULT 0.00,
     CONSTRAINT fk_order_customer
         FOREIGN KEY (customer_id) REFERENCES Customer(customer_id)
         ON DELETE CASCADE,
@@ -80,7 +83,7 @@ SELECT
 FROM Customer c
 JOIN `Order` o ON o.customer_id = c.customer_id
 JOIN OrderItem oi ON oi.order_id = o.order_id
-GROUP BY c.customer_id;
+GROUP BY c.customer_id, c.first_name, c.last_name;
 
 CREATE OR REPLACE VIEW v_available_products AS
 SELECT 
