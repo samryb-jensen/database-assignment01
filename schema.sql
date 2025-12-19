@@ -10,7 +10,7 @@ CREATE TABLE Customer (
     last_name        VARCHAR(50) NOT NULL,
     email            VARCHAR(255) NOT NULL UNIQUE,
     phone            VARCHAR(50),
-    created_at       DATE NOT NULL
+    created_at       DATE NOT NULL DEFAULT (CURRENT_DATE)
 );
 
 CREATE TABLE Product (
@@ -19,7 +19,8 @@ CREATE TABLE Product (
     description      TEXT,
     price            DECIMAL(10,2) NOT NULL,
     available        BOOLEAN NOT NULL DEFAULT TRUE,
-    created_at       DATE NOT NULL
+    created_at       DATE NOT NULL DEFAULT (CURRENT_DATE),
+    CONSTRAINT chk_product_price CHECK (price >= 0)
 );
 
 CREATE TABLE `Order` (
@@ -30,6 +31,8 @@ CREATE TABLE `Order` (
     total_amount     DECIMAL(10,2) NOT NULL,
     CONSTRAINT fk_order_customer
         FOREIGN KEY (customer_id) REFERENCES Customer(customer_id)
+        ON DELETE CASCADE,
+    CONSTRAINT chk_order_total CHECK (total_amount >= 0)
 );
 
 CREATE TABLE OrderItem (
@@ -39,9 +42,12 @@ CREATE TABLE OrderItem (
     quantity         INT NOT NULL,
     unit_price       DECIMAL(10,2) NOT NULL,
     CONSTRAINT fk_orderitem_order
-        FOREIGN KEY (order_id) REFERENCES `Order`(order_id),
+        FOREIGN KEY (order_id) REFERENCES `Order`(order_id)
+        ON DELETE CASCADE,
     CONSTRAINT fk_orderitem_product
-        FOREIGN KEY (product_id) REFERENCES Product(product_id)
+        FOREIGN KEY (product_id) REFERENCES Product(product_id),
+    CONSTRAINT chk_orderitem_qty CHECK (quantity > 0),
+    CONSTRAINT chk_orderitem_unit_price CHECK (unit_price >= 0)
 );
 
 CREATE TABLE CustomerFavorite (
@@ -50,22 +56,19 @@ CREATE TABLE CustomerFavorite (
     marked_at        DATE NOT NULL,
     PRIMARY KEY (customer_id, product_id),
     CONSTRAINT fk_fav_customer
-        FOREIGN KEY (customer_id) REFERENCES Customer(customer_id),
+        FOREIGN KEY (customer_id) REFERENCES Customer(customer_id)
+        ON DELETE CASCADE,
     CONSTRAINT fk_fav_product
         FOREIGN KEY (product_id) REFERENCES Product(product_id)
+        ON DELETE CASCADE
 );
 
-DROP TRIGGER IF EXISTS trg_customer_set_created_at;
-CREATE TRIGGER trg_customer_set_created_at
-BEFORE INSERT ON Customer
-FOR EACH ROW
-    SET NEW.created_at = CURDATE();
-
-DROP TRIGGER IF EXISTS trg_product_set_created_at;
-CREATE TRIGGER trg_product_set_created_at
-BEFORE INSERT ON Product
-FOR EACH ROW
-    SET NEW.created_at = CURDATE();
+CREATE INDEX idx_product_available_name ON Product (available, name);
+CREATE INDEX idx_order_customer_id ON `Order` (customer_id);
+CREATE INDEX idx_order_order_date ON `Order` (order_date);
+CREATE INDEX idx_orderitem_order_id ON OrderItem (order_id);
+CREATE INDEX idx_orderitem_product_id ON OrderItem (product_id);
+CREATE INDEX idx_fav_product_id ON CustomerFavorite (product_id);
 
 CREATE OR REPLACE VIEW v_customer_sales AS
 SELECT 
